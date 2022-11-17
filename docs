@@ -1,0 +1,60 @@
+for cuda enabling: https://www.youtube.com/watch?v=WA7vjorjfaQ
+
+pip3 install jetson-stats (gave error: no pip)
+python3 -m pip install --upgrade pip
+sudo -H pip3 install -U jetson-stats
+sudo apt-get install python-setuptools
+./opencvcuda.sh|& tee build.log
+
+
+https://manivannan-ai.medium.com/install-opencv-and-tensorflow-on-jetson-tx1-and-jetson-tx2-bb4586aa396b
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local \
+        -D WITH_CUDA=ON -D CUDA_ARCH_BIN="7.2" -D CUDA_ARCH_PTX="" \
+        -D WITH_CUBLAS=ON -D ENABLE_FAST_MATH=ON -D CUDA_FAST_MATH=ON \
+        -D ENABLE_NEON=ON -D WITH_LIBV4L=ON -D BUILD_TESTS=OFF \
+        -D BUILD_PERF_TESTS=OFF -D BUILD_EXAMPLES=OFF \
+        -D WITH_QT=ON -D WITH_OPENGL=ON ..
+
+make -j4
+////////////////////////////////////////////////////////////////////////////////////
+
+cd /usr/lib/aarch64-linux-gnu/
+$ sudo ln -sf tegra/libGL.so libGL.so //for jetpack 3
+$ sudo ln -sf libGL.so.1.0.0 libGL.so //for jetpack >=4
+$ sudo vim /usr/local/cuda/include/cuda_gl_interop.h
+
+Here’s how the relevant lines (line #62~68) of cuda_gl_interop.h look like after the modification.
+
+//#if defined(__arm__) || defined(__aarch64__)
+//#ifndef GL_VERSION
+//#error Please include the appropriate gl headers before including cuda_gl_interop.h
+//#endif
+//#else
+ #include <GL/gl.h>
+//#endif
+
+pip3 install --upgrade opencv-python==4.3.0.38
+
+
+//point cloud command:
+roslaunch realsense2_camera rs_camera.launch filters:=pointcloud depth_width:=424 color_width:=424 depth_height:=240 color_height:=240 depth_fps:=15 color_fps:=15 pointcloud_texture_stream:=RS2_STREAM_ANY
+
+sudo apt-get install ros-melodic-ros-numpy
+pip install -U scikit-learn
+
+
+sudo apt-get install python3-rospkg
+install ros-melodic husky desktop
+install rosdep
+sudo apt-get install ros-melodic-ros-numpy
+
+catkin_make --only-pkg-with-deps my_robot
+
+
+roslaunch realsense2_camera rs_camera.launch filters:=pointcloud depth_width:=424 color_width:=424 depth_height:=240 color_height:=240 depth_fps:=15 color_fps:=15 pointcloud_texture_stream:=RS2_STREAM_ANY
+
+roslaunch darknet_ros darknet_ros.launch
+roslaunch husky_viz view_robot.launch
+rosrun my_robot organize
+cd /src/my_robot/scripts
+python3 new_kf.py
